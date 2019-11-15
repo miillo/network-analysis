@@ -1,34 +1,49 @@
 import networkx as nx
+from random import choice
 
 # read graph
-# ??? read_pajek returns 0?
-G = nx.read_adjlist('C:\\Users\\Milosz\\Desktop\\TASS_Project_I\\3.net')
+G = nx.read_adjlist('C:\\Users\\Milosz\\Desktop\\TASS_Project_I\\Ex2_data\\3.txt')
 
-print("Original graph parameters")
-print(G.number_of_nodes())
-print(G.number_of_edges())
+#print('Original graph parameters')
+#print('No. of nodes: ' + str(G.number_of_nodes()))
+#print('No. of edges: ' + str(G.number_of_edges()))
 
-print()
+#print()
 
-# remove selfloops
+# remove self-loops
 G.remove_edges_from(nx.selfloop_edges(G))
-# Graph is loaded as Graph class instance - it means it can't have duplicated edges
+# Graph is loaded as 'networkx.classes.graph.Graph' class instance - it means it can't have duplicated edges
 
-print("Graph without loops / double edges parameters")
-print(G.number_of_nodes())
-print(G.number_of_edges())
+#print('Graph without loops / double edges parameters')
+#print('No. of nodes: ' + str(G.number_of_nodes()))
+#print('No. of edges: ' + str(G.number_of_edges()))
 
-print()
+#print()
+
+# test number of components -> nx.number_connected_components(G)
 
 # generate largest connected component
-largest_cc = max(nx.connected_components(G), key=len) # -> returns SET
-subGraph = G.subgraph(largest_cc)
-# subGraph = [G.subgraph(c).copy() for c in nx.connected_components(G)]
+largest_cc = max(nx.connected_components(G), key=len)
+largest_cc_graph = G.subgraph(largest_cc)
 
-# print(type(subGraph))
-print("Largest component parameters")
-print(subGraph.number_of_nodes())
-print(subGraph.number_of_edges())
+#print('Largest connected component parameters')
+#print('No. of nodes: ' + str(largest_cc_graph.number_of_nodes()))
+#print('No. of edges: ' + str(largest_cc_graph.number_of_edges()))
 
-# nx.write_pajek(G, "C:\\Users\\Milosz\\Desktop\\TASS_Project_I\\test11.net")
-# nx.draw(G)
+approxPathLength = 0
+noOfNodes = largest_cc_graph.number_of_nodes()
+nodes = largest_cc_graph.nodes()
+
+print('@@@@ ' + str(noOfNodes))
+
+for i in range(0, 10000):
+    print('# ' + str(i))
+    node1 = choice(list(nodes))
+    node2 = choice(list(nodes))
+    shortest_path_length = nx.dijkstra_path_length(largest_cc_graph, node1, node2)
+    approxPathLength += shortest_path_length
+
+print(approxPathLength / (noOfNodes * (noOfNodes - 1)))
+
+#print(nx.average_shortest_path_length(largest_cc_graph))
+print('\nEnd of processing')
