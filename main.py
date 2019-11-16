@@ -81,49 +81,64 @@ largest_cc_graph = G.subgraph(largest_cc)
 
 print()
 
-# move after k-cores !!!!!!!
-# degree_sequence = sorted([d for n, d in largest_cc_graph.degree()], reverse=True)
-# print(max(degree_sequence))
-#
-# degreeCount = collections.Counter(degree_sequence)
-# deg, cnt = zip(*degreeCount.items())
-#
-# fig, ax = plt.subplots()
-# plt.bar(deg, cnt, width=0.10, color='b')
-#
-# plt.title("Degree Histogram")
-# plt.ylabel("Count")
-# plt.xlabel("Degree")
-# ax.set_xticks([d + 0.4 for d in deg])
-# ax.set_xticklabels(deg)
-#
-# plt.show()
-
-all_deg = list(dict(nx.degree(largest_cc_graph)).values())
-unique_deg = list(set(all_deg))
-count_of_deg = []
-for i in unique_deg:
-    x = all_deg.count(i)
-    count_of_deg.append(x)
-
-axes = plt.gca()
-axes.set_xlim([0,60])
-
-plt.bar(unique_deg, count_of_deg)
-plt.show()
-
-# plt.hist(list(dict(nx.degree(largest_cc_graph)).values()))
-# plt.show()
-
-
+########################################################
 # find no. of k-cores with highest possible k
+print('First shot')
 print_k_cores(largest_cc_graph)
 
-print()
+# unfreeze graph
+newOne = nx.Graph(largest_cc_graph)
+
+print('\nSecond shot')
+to_del1 = [node for node, degree in dict(newOne.degree()).items() if degree > 155]
+newOne.remove_nodes_from(to_del1)
+print_k_cores(newOne)
+
+# print('\nThird shot')
+# to_del2 = [node for node, degree in dict(largest_cc_graph.degree()).items() if degree > 155]
+# ts = ss.remove_nodes_from(to_del2)
+# print_k_cores(ts)
 
 # first analysis showed that k = 155 is highest
 #cutDegrees = cut_degree(largest_cc_graph, 156)
 #print_k_cores(cutDegrees)
 
+# DEBUG
+# print(dict(largest_cc_graph.degree()).items())
+# for node, degree in dict(largest_cc_graph.degree()).items():
+#     if degree > 2000:
+#         print('NODE: ' + node + ' | DEGREE: ' + str(degree))
+
+########################################################
+
+# Distribution of nodes degrees
+# degree_sequence = sorted([d for n, d in largest_cc_graph.degree()], reverse=True)
+# degreeCount = collections.Counter(degree_sequence)
+# deg, cnt = zip(*degreeCount.items())
+#
+# plt.bar(deg, cnt, width=0.10, color='b')
+#
+# plt.title("Degree Histogram")
+# plt.ylabel("Count")
+# plt.xlabel("Degree")
+# axes = plt.gca()
+# axes.set_xlim([0,60])
+# axes.set_ylim([0,14000])
+# plt.show()
+
 
 print('\nEnd of processing')
+
+# ! ! ! Tutorial sample degree plot
+# all_deg = list(dict(nx.degree(largest_cc_graph)).values())
+# unique_deg = list(set(all_deg))
+# count_of_deg = []
+# for i in unique_deg:
+#     x = all_deg.count(i)
+#     count_of_deg.append(x)
+#
+# axes = plt.gca()
+# axes.set_xlim([0,60])
+#
+# plt.bar(unique_deg, count_of_deg)
+# plt.show()
