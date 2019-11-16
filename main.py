@@ -1,5 +1,8 @@
 import networkx as nx
 from random import choice
+import operator
+import itertools
+import collections
 
 # read graph
 G = nx.read_adjlist('C:\\Users\\Milosz\\Desktop\\TASS_Project_I\\Ex2_data\\3.txt')
@@ -30,20 +33,39 @@ largest_cc_graph = G.subgraph(largest_cc)
 #print('No. of nodes: ' + str(largest_cc_graph.number_of_nodes()))
 #print('No. of edges: ' + str(largest_cc_graph.number_of_edges()))
 
-approxPathLength = 0
-noOfNodes = largest_cc_graph.number_of_nodes()
-nodes = largest_cc_graph.nodes()
+# approximation of average path length with three random samples: 100 / 1k / 10k
+#approxPathLength = 0
+#noOfNodes = largest_cc_graph.number_of_nodes()
+#nodes = largest_cc_graph.nodes()
 
-print('@@@@ ' + str(noOfNodes))
+#print('@@@@ ' + str(noOfNodes))
 
-for i in range(0, 10000):
-    print('# ' + str(i))
-    node1 = choice(list(nodes))
-    node2 = choice(list(nodes))
-    shortest_path_length = nx.dijkstra_path_length(largest_cc_graph, node1, node2)
-    approxPathLength += shortest_path_length
+#for i in range(0, 10000):
+#    print('# ' + str(i))
+#    node1 = choice(list(nodes))
+#    node2 = choice(list(nodes))
+#    shortest_path_length = nx.dijkstra_path_length(largest_cc_graph, node1, node2)
+#    approxPathLength += shortest_path_length
 
-print(approxPathLength / (noOfNodes * (noOfNodes - 1)))
+#print(approxPathLength / (noOfNodes * (noOfNodes - 1)))
 
-#print(nx.average_shortest_path_length(largest_cc_graph))
+print()
+
+# find no. of k-cores with highest possible k
+core_numbers = nx.core_number(largest_cc_graph)
+
+# count number of nodes for each k-core
+inv_map = {}
+for k, v in core_numbers.items():
+    inv_map[v] = inv_map.get(v, [])
+    inv_map[v].append(k)
+
+# aggregate nodes to list length
+mapped = {k: len(v) for k, v in inv_map.items()}
+# sort by k and print
+sorted_core_numbers = collections.OrderedDict(sorted(mapped.items(), key=lambda kv: kv[0]))
+print(sorted_core_numbers)
+
+
+
 print('\nEnd of processing')
