@@ -142,18 +142,23 @@ print(type(res))
 for num in res:
     print(num)
 
-resList = []
+degreeBasket = []
 for i in res:
     # print("@@" + str(i))
     ww = sum(1 for x in degrees if x > i)
     # ww = sum(i > num for num in res)
-    resList.append(ww)
+    degreeBasket.append(ww)
 
-print(resList)
+print(degreeBasket)
 
-ok = nx.degree_histogram(largest_cc_graph)
-print(ok)
+frequencyOfDegrees = nx.degree_histogram(largest_cc_graph)
+print(frequencyOfDegrees)
+frequencyBaskets = []
+for i in res:
+    ww = frequencyOfDegrees[i]
+    frequencyBaskets.append(ww)
 
+print(frequencyBaskets)
 # save degrees to list
 # degrees = [val for (node, val) in largest_cc_graph.degree()]
 # print(degrees)
