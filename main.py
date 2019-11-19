@@ -4,6 +4,8 @@ import operator
 import itertools
 import collections
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.linear_model import LinearRegression
 
 
 def cut_degree(graph, degree):
@@ -81,18 +83,18 @@ largest_cc_graph = G.subgraph(largest_cc)
 
 print()
 
-########################################################
+# #######################T O D O################################
 # find no. of k-cores with highest possible k
-print('First shot')
-print_k_cores(largest_cc_graph)
-
-# unfreeze graph
-newOne = nx.Graph(largest_cc_graph)
-
-print('\nSecond shot')
-to_del1 = [node for node, degree in dict(newOne.degree()).items() if degree > 155]
-newOne.remove_nodes_from(to_del1)
-print_k_cores(newOne)
+# print('First shot')
+# print_k_cores(largest_cc_graph)
+#
+# # unfreeze graph
+# newOne = nx.Graph(largest_cc_graph)
+#
+# print('\nSecond shot')
+# to_del1 = [node for node, degree in dict(newOne.degree()).items() if degree > 155]
+# newOne.remove_nodes_from(to_del1)
+# print_k_cores(newOne)
 
 # print('\nThird shot')
 # to_del2 = [node for node, degree in dict(largest_cc_graph.degree()).items() if degree > 155]
@@ -125,6 +127,40 @@ print_k_cores(newOne)
 # axes.set_xlim([0,60])
 # axes.set_ylim([0,14000])
 # plt.show()
+
+########################################################
+# wyznacz wykładnik rozkładu potęgowego metodą regresji dla dopełnienia dystrybuanty rozkładu stopni, dla przedziałów
+# rozlokowanych logarytmicznie
+
+# wyznaczenie kubelkow
+res = np.logspace(1, 3, 8, dtype = int)
+# zapis stopni w. w liście
+degrees = [val for (node, val) in largest_cc_graph.degree()]
+
+print(type(res))
+
+for num in res:
+    print(num)
+
+resList = []
+for i in res:
+    # print("@@" + str(i))
+    ww = sum(1 for x in degrees if x > i)
+    # ww = sum(i > num for num in res)
+    resList.append(ww)
+
+print(resList)
+
+ok = nx.degree_histogram(largest_cc_graph)
+print(ok)
+
+# save degrees to list
+# degrees = [val for (node, val) in largest_cc_graph.degree()]
+# print(degrees)
+
+# print('Largest connected component parameters')
+# print('No. of nodes: ' + str(largest_cc_graph.number_of_nodes()))
+# print('No. of edges: ' + str(largest_cc_graph.number_of_edges()))
 
 
 print('\nEnd of processing')
