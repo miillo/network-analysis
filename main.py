@@ -133,35 +133,46 @@ print()
 # rozlokowanych logarytmicznie
 
 # wyznaczenie kubelkow
-res = np.logspace(1, 3, 8, dtype = int)
+res = np.logspace(1, 3, 7, dtype = int)
 # zapis stopni w. w liście
 degrees = [val for (node, val) in largest_cc_graph.degree()]
 
-print(type(res))
-
-for num in res:
-    print(num)
-
+# zliczenie w. o podanych st. w kubełkach
 degreeBasket = []
 for i in res:
-    # print("@@" + str(i))
     ww = sum(1 for x in degrees if x > i)
-    # ww = sum(i > num for num in res)
     degreeBasket.append(ww)
 
-print(degreeBasket)
-
+# pobranie częstości st. w
 frequencyOfDegrees = nx.degree_histogram(largest_cc_graph)
-print(frequencyOfDegrees)
 frequencyBaskets = []
 for i in res:
     ww = frequencyOfDegrees[i]
     frequencyBaskets.append(ww)
 
-print(frequencyBaskets)
-# save degrees to list
-# degrees = [val for (node, val) in largest_cc_graph.degree()]
-# print(degrees)
+# regresja
+x = np.array(degreeBasket).reshape((-1,1))
+y = np.array(frequencyBaskets)
+
+model = LinearRegression().fit(x,y)
+r_sq = model.score(x,y)
+pred = model.predict(x)
+
+print(str(degreeBasket))
+print(str(frequencyBaskets))
+
+plt.plot(res, frequencyBaskets, 'b.')
+plt.plot(res, pred, 'r-', label = 'linear regression')
+plt.xlabel('Node degree')
+plt.ylabel('Node frequency')
+plt.legend()
+plt.show()
+
+
+# diagram hilla
+
+# print("FOD: " + str(frequencyOfDegrees))
+# print(frequencyBaskets)
 
 # print('Largest connected component parameters')
 # print('No. of nodes: ' + str(largest_cc_graph.number_of_nodes()))
