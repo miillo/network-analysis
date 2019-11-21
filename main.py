@@ -6,18 +6,7 @@ import collections
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
-
-
-def cut_degree(graph, degree):
-    gg = nx.Graph()
-    for n, d in graph.degree_iter():
-        if d > degree:
-            gg.add_node(n)
-    for n in gg.nodes_iter():
-        for nbr, eattr in graph[n].items():
-            if nbr in gg:
-                gg.add_edge(n, nbr)
-    return gg
+import powerlaw
 
 
 def print_k_cores(graph):
@@ -151,28 +140,54 @@ for i in res:
     frequencyBaskets.append(ww)
 
 # regresja
-x = np.array(degreeBasket).reshape((-1,1))
-y = np.array(frequencyBaskets)
+# x = np.array(degreeBasket).reshape((-1,1))
+# y = np.array(frequencyBaskets)
+#
+# model = LinearRegression().fit(x,y)
+# r_sq = model.score(x,y)
+# pred = model.predict(x)
+#
+# print(str(degreeBasket))
+# print(str(frequencyBaskets))
+#
+# plt.plot(res, frequencyBaskets, 'b.')
+# plt.plot(res, pred, 'r-', label = 'linear regression')
+# plt.xlabel('Node degree')
+# plt.ylabel('Node frequency')
+# plt.legend()
+# plt.show()
 
-model = LinearRegression().fit(x,y)
-r_sq = model.score(x,y)
-pred = model.predict(x)
 
-print(str(degreeBasket))
-print(str(frequencyBaskets))
+# diagram hilla - pakiet lawpace
 
-plt.plot(res, frequencyBaskets, 'b.')
-plt.plot(res, pred, 'r-', label = 'linear regression')
-plt.xlabel('Node degree')
-plt.ylabel('Node frequency')
-plt.legend()
+# working sample # # #
+# d=[6, 4, 0, 0, 0, 0, 0, 1, 3, 1, 0, 3, 3, 0, 0, 0, 0, 1, 1, 0, 0, 0, 3,2,  3, 3, 2, 5, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 2, 1, 0, 1, 0, 0, 0, 0, 1,0, 1, 2, 0, 0, 0, 2, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1,3, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 2, 2, 3, 2, 1, 0, 0, 0, 1, 2]
+# fit = powerlaw.Fit(np.array(d)+1,xmin=1,discrete=True)
+# fit.power_law.plot_pdf( color= 'b',linestyle='--',label='fit ccdf')
+# fit.plot_pdf( color= 'b')
+# plt.show()
+# print('alpha= ',fit.power_law.alpha,'  sigma= ',fit.power_law.sigma)
+
+print(frequencyOfDegrees)
+
+fit = powerlaw.Fit(np.array(frequencyOfDegrees) + 1, xmin= 1, discrete= True)
+fit.power_law.plot_pdf(color='b', linestyle='--',label='Fit ccdf')
+fit.plot_pdf( color= 'b')
 plt.show()
+print('alpha= ',fit.power_law.alpha,'  sigma= ',fit.power_law.sigma)
+
+# fit = powerlaw.Fit(frequencyOfDegrees)
+# powerlaw.plot_pdf(frequencyOfDegrees)
+# plt.show()
+# fig2 = fit.plot_pdf(color = 'b', linewidth = 2)
+# fit.power_law.plot_pdf(color = 'b')
+# print(fit.power_law.alpha)
+# fig2 = fit.plot_pdf(color = ‘b’, linewidth = 2)
+# print(fit.xmin)
+# print(fit.alpha)
+# powerlaw.plot_pdf()
 
 
-# diagram hilla
-
-# print("FOD: " + str(frequencyOfDegrees))
-# print(frequencyBaskets)
 
 # print('Largest connected component parameters')
 # print('No. of nodes: ' + str(largest_cc_graph.number_of_nodes()))
