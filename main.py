@@ -64,18 +64,18 @@ largest_cc_graph = G.subgraph(largest_cc)
 
 # TODO dla trzech prob
 
-sumOfShortestPaths = 0
-noOfNodes = largest_cc_graph.number_of_nodes()
-nodes = largest_cc_graph.nodes()
-
-for i in range(0, 10):
-    node1 = choice(list(nodes))
-    node2 = choice(list(nodes))
-    shortest_path_length = nx.dijkstra_path_length(largest_cc_graph, node1, node2)
-    sumOfShortestPaths += shortest_path_length
-    print('Iteration: ' + str(i) + ' | Current sum: ' + str(sumOfShortestPaths))
-
-print(sumOfShortestPaths / (noOfNodes * (noOfNodes - 1)))
+# sumOfShortestPaths = 0
+# noOfNodes = largest_cc_graph.number_of_nodes()
+# nodes = largest_cc_graph.nodes()
+#
+# for i in range(0, 100):
+#     node1 = choice(list(nodes))
+#     node2 = choice(list(nodes))
+#     shortest_path_length = nx.dijkstra_path_length(largest_cc_graph, node1, node2)
+#     sumOfShortestPaths += shortest_path_length
+#     print('Iteration: ' + str(i) + ' | Current sum: ' + str(sumOfShortestPaths))
+#
+# print(sumOfShortestPaths / (noOfNodes * (noOfNodes - 1)))
 
 # print()
 
@@ -117,46 +117,39 @@ print(sumOfShortestPaths / (noOfNodes * (noOfNodes - 1)))
 # # # # wyznacz wykładnik rozkładu potęgowego metodą regresji dla dopełnienia dystrybuanty rozkładu stopni,
 # # # # dla przedziałów rozlokowanych logarytmicznie
 
-
-# TODO ffff
 # # wyznaczenie przedziałów logarytmicznych
-# logIntervals = np.logspace(1, 3, 7, dtype = int)
+logIntervals = np.logspace(2.2, 3, 7, dtype = int)
 # # zapis stopni wierzchołków w liście
-# degrees = [val for (node, val) in largest_cc_graph.degree()]
-#
+degrees = [val for (node, val) in largest_cc_graph.degree()]
+
 # # zliczenie wierzchołków w przedziałach
-# degreeBaskets = []
-# for i in logIntervals:
-#     intervalSum = sum(1 for x in degrees if x > i)
-#     degreeBaskets.append(intervalSum)
-#
+degreeBaskets = []
+for i in logIntervals:
+    intervalSum = sum(1 for x in degrees if x > i)
+    degreeBaskets.append(intervalSum)
+
 # # zliczenie częstotliwości stopni wierzchołków
-# frequencyOfDegrees = nx.degree_histogram(largest_cc_graph)
-# print(frequencyOfDegrees)
-#
-# frequencyBaskets = []
-# for i in logIntervals:
-#     frequencyInterval = frequencyOfDegrees[i]
-#     frequencyBaskets.append(frequencyInterval)
-#
-# print(frequencyBaskets)
-#
-# # regresja
-# x = np.array(degreeBaskets).reshape((-1, 1))
-# y = np.array(frequencyBaskets)
-#
-# model = LinearRegression().fit(x, y)
-# r_sq = model.score(x, y)
-# pred = model.predict(x)
-#
-# plt.plot(logIntervals, frequencyBaskets, 'b.')
-# plt.plot(logIntervals, pred, 'r-', label='linear regression')
-# plt.xlabel('Stopień wierzchołka')
-# plt.ylabel('Częstotliwość')
-# plt.legend()
-# plt.show()
+frequencyOfDegrees = nx.degree_histogram(largest_cc_graph)
+frequencyBaskets = []
+for i in logIntervals:
+    frequencyInterval = frequencyOfDegrees[i]
+    frequencyBaskets.append(frequencyInterval)
 
+# # regresja liniowa
+x = np.array(degreeBaskets).reshape((-1, 1))
+y = np.array(frequencyBaskets)
 
+model = LinearRegression().fit(x, y)
+pred = model.predict(x)
+
+plt.plot(logIntervals, frequencyBaskets, 'b.')
+plt.plot(logIntervals, pred, 'r-', label='regresja liniowa')
+plt.xlabel('Stopień wierzchołka')
+plt.ylabel('Częstotliwość')
+plt.legend()
+plt.show()
+
+# # # #
 # diagram hilla - pakiet lawpace
 
 # working sample # # #
